@@ -42,11 +42,11 @@ def upload_file():
 
 
 def preprocess(image):
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    grey_scale = hsv_image[..., 2]
+    """Convert image to greyscale and adjust brightness to facilitate OCR."""
+    grey_scale_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)[..., 2]
 
-    adjustment = int((255 - np.median(grey_scale)) * 0.75)
-    adjusted_image = np.where((255 - grey_scale) < adjustment, 255, grey_scale + adjustment)
+    adjustment = int((255 - np.median(grey_scale_image)) * 0.75)
+    adjusted_image = np.where((255 - grey_scale_image) < adjustment, 255, grey_scale_image + adjustment)
 
     blurred_image = cv2.GaussianBlur(adjusted_image, (5, 5), 0)
     threshold, thresholded_image = cv2.threshold(
