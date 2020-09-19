@@ -3,13 +3,14 @@ from flask import Flask, redirect, render_template, request
 import numpy as np
 import pytesseract
 
+from .processing import preprocess
+from .settings import ALLOWED_EXTENSIONS
 
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 
 
-def allowed_file(filename):
+def allowed(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -32,24 +33,10 @@ def upload_file():
         return redirect(request.url)
 
     # if file type is allowed, process the image for text
-    if file and allowed_file(file.filename):
+    if file and allowed(file.filename):
         data = np.frombuffer(file.read(), np.uint8)
-        image = cv2.imdecode(data, cv2.IMREAD_COLOR)
+        raw_image = cv2.imdecode(data, cv2.IMREAD_COLOR)
         
-        processed_image = preprocess(image)
+        processed_image = preprocess(raw_image)
         text = pytesseract.image_to_string(processed_image)
         return text
-
-
-def preprocess(image):
-    """Convert image to greyscale and adjust brightness to facilitate OCR."""
-    grey_scale_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)[..., 2]
-
-    adjustment = int((255 - np.median(grey_scale_image)) * 0.75)
-    adjusted_image = np.where((255 - grey_scale_image) < adjustment, 255, grey_scale_image + adjustment)
-
-    blurred_image = cv2.GaussianBlur(adjusted_image, (5, 5), 0)
-    threshold, thresholded_image = cv2.threshold(
-        blurred_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-    return thresholded_image
