@@ -1,12 +1,12 @@
 import cv2
 from flask import Blueprint, redirect, request
 import numpy as np
-import pytesseract
+import pytesseract as pt
 
 from . import settings
 
 
-def allowed(filename):
+def allowed_ext(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in settings.ALLOWED_EXTENSIONS
 
@@ -53,10 +53,21 @@ def upload_file():
         return redirect(request.url)
 
     # if file type is allowed, process the image for text
-    if file and allowed(file.filename):
+    if file and allowed_ext(file.filename):
+        dtype = request.args.get('dtype') or 'text'
+
         data = np.frombuffer(file.read(), np.uint8)
         raw_image = cv2.imdecode(data, cv2.IMREAD_COLOR)
-        
         processed_image = preprocess(raw_image)
-        text = pytesseract.image_to_string(processed_image)
-        return text
+        
+        if dtype == 'text':
+            return pt.image_to_string(processed_image)
+        
+        elif dtype == 'data':
+            return pt.image_to_data(processed_image, output_type=pt.Output.STRING)
+        
+        elif dtype == 'dict':
+            return pt.image_to_data(processed_image, output_type=pt.Output.DICT)
+            
+        elif dtype == 'df':
+            return pt.image_to_data(processed_image, output_type=pt.Output.DATAFRAME)
