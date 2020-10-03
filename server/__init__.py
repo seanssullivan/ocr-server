@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-from ocr import v1
+from routes import v1
 
 def create_app():
     # create and configure the app

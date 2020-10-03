@@ -1,8 +1,10 @@
+# Third-Party Imports
 import cv2
 from flask import Blueprint, redirect, request
 import numpy as np
 import pytesseract as pt
 
+# Local Imports
 from . import settings
 
 
@@ -32,10 +34,8 @@ def adjust_brightness(image):
 
 def convert_to_binary(image):
     blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
-    threshold, binary_image = cv2.threshold(
-        blurred_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    binary_image = cv2.threshold(blurred_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     return binary_image
-
 
 
 v1 = Blueprint('v1', __name__, url_prefix='/v1')
