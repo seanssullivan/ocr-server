@@ -59,23 +59,32 @@ class ImageProcessor:
         raise TypeError
 
     @staticmethod
-    def greyscale(image):
-        if type(image) is Image:
-            return ImageOps.grayscale(image)
-        
-        if type(image) is np.ndarray:
-            # return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)[..., 2]
-        
-        raise TypeError
-    
-    @staticmethod
-    def gaussian(image):
+    def gaussian_blur(image):
         if type(image) is Image:
             return image.filter(ImageFilter.GaussianBlur(radius=5))
 
         if type(image) is np.ndarray:
             return cv2.GaussianBlur(image, (5, 5), 0)
+        
+        raise TypeError
+
+    @staticmethod
+    def greyscale(image):
+        if type(image) is Image:
+            return ImageOps.grayscale(image)
+        
+        if type(image) is np.ndarray:
+            return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        
+        raise TypeError
+
+    @staticmethod
+    def hsv(image):
+        if type(image) is Image:
+            raise NotImplementedError
+        
+        if type(image) is np.ndarray:
+            return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)[..., 2]
         
         raise TypeError
 

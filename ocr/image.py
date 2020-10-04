@@ -24,8 +24,10 @@ def extract_image_text(file, rtype='text'):
     if rtype == 'df':
         return pt.image_to_data(processed_image, output_type=pt.Output.DATAFRAME)
 
+    return 'Completed'
+
 
 def process(image):
     """Convert image to greyscale and adjust brightness to facilitate OCR."""
-    processor = ImageProcessor(['greyscale', 'brightness', 'gaussian', 'binarize'])
+    processor = ImageProcessor(['hsv', 'brightness', 'gaussian_blur', 'binarize'])
     return processor.run(image)
