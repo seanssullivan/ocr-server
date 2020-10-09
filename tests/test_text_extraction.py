@@ -1,13 +1,16 @@
+# Standard Imports
 import re
 import unittest
 
-from pdfminer.layout import LTAnno, LTChar, LTPage, LTTextContainer, LTTextBoxHorizontal, LTTextLineHorizontal
+# Third-Party Imports
+from pdfminer.layout import LTChar, LTPage, LTTextContainer, LTTextBoxHorizontal, LTTextLineHorizontal
 
+# Local Imports
 from text_extractors.documents import extract_document_text
-from text_extractors.selectors import extract_characters, extract_pages
+from text_extractors.selectors import extract_pages
 from text_extractors.selectors import extract_textboxes
 from text_extractors.selectors import extract_lines
-# from text_extractors.selectors import extract_characters
+from text_extractors.selectors import extract_characters
 
 
 class TestExtractDocumentText(unittest.TestCase):

@@ -6,8 +6,8 @@ from text_extractors.images import extract_image_text
 from text_extractors.documents import extract_document_text
 
 
-DOCUMENT_FORMATS = ['pdf']
-IMAGE_FORMATS = ['gif', 'jpg', 'jpeg', 'png']
+DOCUMENT_FORMATS = ('.pdf')
+IMAGE_FORMATS = ('.bmp', '.gif', '.jpg', '.jpeg', '.png', '.tif', '.tiff')
 
 
 v1 = Blueprint('v1', __name__, url_prefix='/v1/')
@@ -25,19 +25,16 @@ def upload_file():
     if file.filename == '':
         return redirect(request.url)
 
-    # get file extension
-    ext = file.filename.rsplit('.', 1)[1].lower()
-
     # get requested response type
     # rtype = request.args.get('response') or 'text'
 
     # if file extension indicates an image
-    if ext in IMAGE_FORMATS:
+    if file.filename.endswith(IMAGE_FORMATS):
         text = extract_image_text(file)
         return text
 
     # if file extension indicates a document
-    elif ext in DOCUMENT_FORMATS:
+    elif file.filename.endswith(DOCUMENT_FORMATS):
         text = extract_document_text(file)
         return text
 
