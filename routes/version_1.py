@@ -2,8 +2,8 @@
 from flask import Blueprint, redirect, request
 
 # Local Imports
-from ocr.document import extract_document_text
-from ocr.image import extract_image_text
+from text_extractors.images import extract_image_text
+from text_extractors.documents import extract_document_text
 
 
 DOCUMENT_FORMATS = ['pdf']
