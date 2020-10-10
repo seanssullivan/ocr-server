@@ -6,10 +6,12 @@ from text_extractors.images import extract_image_text
 from text_extractors.documents import extract_document_text
 
 
+# Settings
 DOCUMENT_FORMATS = ('.pdf')
 IMAGE_FORMATS = ('.bmp', '.gif', '.jpg', '.jpeg', '.png', '.tif', '.tiff')
 
 
+# Initialize Flask blueprint
 v1 = Blueprint('v1', __name__, url_prefix='/v1/')
 
 
